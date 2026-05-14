@@ -22,10 +22,13 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
         <div className="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link 
             href="/" 
-            className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors group"
+            className="flex items-center gap-3 text-sm text-gray-400 hover:text-white transition-colors group"
           >
             <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-            Blog
+            <div className="flex items-center gap-2">
+              <img src="/logo.svg" alt="Logo" className="w-6 h-6" />
+              <span className="font-bold text-base text-white">Blog</span>
+            </div>
           </Link>
           <a 
             href="https://midman247.com" 

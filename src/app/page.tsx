@@ -11,8 +11,11 @@ export default async function Home() {
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 bg-[#0a0a0b]/80 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="font-bold text-lg tracking-tight">
-            Midman247 <span className="text-blue-500">Blog</span>
+          <Link href="/" className="flex items-center gap-2 group">
+            <img src="/logo.svg" alt="Midman247 Logo" className="w-8 h-8 transition-transform group-hover:scale-110" />
+            <span className="font-bold text-lg tracking-tight">
+              Midman247 <span className="text-blue-500">Blog</span>
+            </span>
           </Link>
           <a 
             href="https://midman247.com" 
