@@ -8,8 +8,24 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-[#0a0a0b] text-white">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 bg-[#0a0a0b]/80 backdrop-blur-xl border-b border-white/5">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="font-bold text-lg tracking-tight">
+            Midman247 <span className="text-blue-500">Blog</span>
+          </Link>
+          <a 
+            href="https://midman247.com" 
+            className="text-sm font-medium text-gray-400 hover:text-white transition-colors flex items-center gap-2 group"
+          >
+            Về website chính
+            <span className="transition-transform group-hover:translate-x-0.5">→</span>
+          </a>
+        </div>
+      </nav>
+
       {/* Hero Section */}
-      <section className="relative py-20 px-6 overflow-hidden">
+      <section className="relative py-32 px-6 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent blur-3xl opacity-50" />
         
         <div className="max-w-4xl mx-auto text-center relative z-10">

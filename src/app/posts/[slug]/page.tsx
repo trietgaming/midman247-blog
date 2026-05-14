@@ -19,14 +19,20 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
     <article className="min-h-screen bg-[#0a0a0b] text-gray-200 selection:bg-blue-500/30">
       {/* Header / Nav */}
       <nav className="fixed top-0 w-full z-50 bg-[#0a0a0b]/80 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-4xl mx-auto px-6 h-16 flex items-center">
+        <div className="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link 
             href="/" 
             className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors group"
           >
             <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-            Quay lại trang chủ
+            Blog
           </Link>
+          <a 
+            href="https://midman247.com" 
+            className="text-sm font-medium text-gray-400 hover:text-white transition-colors group"
+          >
+            Midman247.com <span className="inline-block transition-transform group-hover:translate-x-0.5">→</span>
+          </a>
         </div>
       </nav>
 
