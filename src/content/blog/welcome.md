@@ -1,8 +1,8 @@
 ---
-title: "Chào mừng đến với Midman247 Blog"
-date: 2026-05-14T17:00:00Z
-description: "Đây là bài viết đầu tiên trên hệ thống blog mới của chúng tôi."
-image: "/images/welcome-blog.jpg"
+title: Chào mừng đến với Midman247 Blog
+date: 2026-05-14T17:00:00.000Z
+description: Đây là bài viết đầu tiên trên hệ thống blog mới của chúng tôi.
+image: ""
 ---
 
 ## Xin chào!
