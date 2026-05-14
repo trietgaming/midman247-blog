@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import { getSortedPostsData } from '../lib/blog';
 
-export default function Home() {
-  const allPostsData = getSortedPostsData();
+export const revalidate = 60; // Revalidate every 60 seconds for near-instant updates
+
+export default async function Home() {
+  const allPostsData = await getSortedPostsData();
 
   return (
     <main className="min-h-screen bg-[#0a0a0b] text-white">

@@ -1,10 +1,12 @@
-import fs from 'fs';
-import path from 'path';
 import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
 
-const postsDirectory = path.join(process.cwd(), 'src/content/blog');
+const GITHUB_OWNER = 'trietgaming';
+const GITHUB_REPO = 'midman247-blog';
+const GITHUB_BRANCH = 'main';
+const GITHUB_PATH = 'src/content/blog';
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
 export interface PostData {
   slug: string;
@@ -15,57 +17,80 @@ export interface PostData {
   contentHtml?: string;
 }
 
-export function getSortedPostsData(): PostData[] {
-  // Get file names under /src/content/blog
-  if (!fs.existsSync(postsDirectory)) {
+const headers: Record<string, string> = {
+  Accept: 'application/vnd.github.v3+json',
+};
+
+if (GITHUB_TOKEN) {
+  headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+}
+
+export async function getSortedPostsData(): Promise<PostData[]> {
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}?ref=${GITHUB_BRANCH}`;
+  
+  try {
+    const res = await fetch(url, { 
+      headers,
+      next: { revalidate: 60 } // ISR: Check for updates every 60 seconds
+    });
+    
+    if (!res.ok) return [];
+    
+    const files = await res.json();
+    
+    const allPostsData = await Promise.all(
+      files
+        .filter((file: any) => file.name.endsWith('.md'))
+        .map(async (file: any) => {
+          const slug = file.name.replace(/\.md$/, '');
+          
+          // Fetch individual file content
+          const contentRes = await fetch(file.download_url, { 
+            headers,
+            next: { revalidate: 60 }
+          });
+          const fileContents = await contentRes.text();
+          
+          const { data } = matter(fileContents);
+          return {
+            slug,
+            ...(data as { title: string; date: string; description: string; image?: string }),
+          };
+        })
+    );
+
+    return allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1));
+  } catch (error) {
+    console.error('Error fetching posts from GitHub:', error);
     return [];
   }
-  const fileNames = fs.readdirSync(postsDirectory);
-  const allPostsData = fileNames.map((fileName) => {
-    // Remove ".md" from file name to get slug
-    const slug = fileName.replace(/\.md$/, '');
-
-    // Read markdown file as string
-    const fullPath = path.join(postsDirectory, fileName);
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
-
-    // Use gray-matter to parse the post metadata section
-    const { data } = matter(fileContents);
-
-    // Combine the data with the slug
-    return {
-      slug,
-      ...(data as { title: string; date: string; description: string; image?: string }),
-    };
-  });
-
-  // Sort posts by date
-  return allPostsData.sort((a, b) => {
-    if (a.date < b.date) {
-      return 1;
-    } else {
-      return -1;
-    }
-  });
 }
 
 export async function getPostData(slug: string): Promise<PostData> {
-  const fullPath = path.join(postsDirectory, `${slug}.md`);
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}/${slug}.md?ref=${GITHUB_BRANCH}`;
+  
+  try {
+    const res = await fetch(url, { 
+      headers,
+      next: { revalidate: 60 }
+    });
+    
+    if (!res.ok) throw new Error('Post not found');
+    
+    const file = await res.json();
+    const fileContents = Buffer.from(file.content, 'base64').toString('utf8');
 
-  // Use gray-matter to parse the post metadata section
-  const { data, content } = matter(fileContents);
+    const { data, content } = matter(fileContents);
+    const processedContent = await remark().use(html).process(content);
+    const contentHtml = processedContent.toString();
 
-  // Use remark to convert markdown into HTML string
-  const processedContent = await remark()
-    .use(html)
-    .process(content);
-  const contentHtml = processedContent.toString();
-
-  // Combine the data with the slug and contentHtml
-  return {
-    slug,
-    contentHtml,
-    ...(data as { title: string; date: string; description: string; image?: string }),
-  };
+    return {
+      slug,
+      contentHtml,
+      ...(data as { title: string; date: string; description: string; image?: string }),
+    };
+  } catch (error) {
+    console.error(`Error fetching post ${slug} from GitHub:`, error);
+    throw error;
+  }
 }

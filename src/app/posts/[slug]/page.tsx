@@ -2,8 +2,10 @@ import { getPostData, getSortedPostsData } from '../../../lib/blog';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
 
+export const revalidate = 60; // Revalidate every 60 seconds
+
 export async function generateStaticParams() {
-  const posts = getSortedPostsData();
+  const posts = await getSortedPostsData();
   return posts.map((post) => ({
     slug: post.slug,
   }));
