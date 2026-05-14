@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import { getSortedPostsData } from '../lib/blog';
 
-export const revalidate = 60; // Revalidate every 60 seconds for near-instant updates
-
 export default async function Home() {
   const allPostsData = await getSortedPostsData();
 
