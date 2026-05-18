@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Midman247 Blog - Kiến thức & Cập nhật Giao dịch",
   description: "Blog chia sẻ kiến thức giao dịch an toàn, hướng dẫn sử dụng và các tin tức mới nhất từ hệ sinh thái Midman247.",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 export default function RootLayout({
